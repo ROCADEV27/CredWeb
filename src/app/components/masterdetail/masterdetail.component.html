@@ -1,0 +1,517 @@
+<table mat-table
+       [dataSource]="dataSource" multiTemplateDataRows
+       class="mat-elevation-z8" >
+       
+  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+    <th mat-header-cell *matHeaderCellDef>{{column}}</th>
+    <td mat-cell *matCellDef="let element">{{element[column]}}</td>    
+  </ng-container>  
+  <ng-container matColumnDef="expand">
+    <th mat-header-cell *matHeaderCellDef aria-label="row actions"> </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+      <div class="example-element-detail"
+           [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+           <table class="detail-table" border="1">
+            <tr border="1">
+              <th>Foto</th>
+              <th>Sexo</th>
+              <th>CURP</th>
+              <th>Nacimiento</th>
+              <th>Municipio</th>
+              <th>Jardin</th>
+              <th>Alumno</th>
+            </tr> 
+            <tr>
+              <td>
+                <img width="100" height="100" src='{{element.Foto}}' alt="thumbnail">
+               </td>
+               <td>
+                <div class="example-element-position"> {{element.Sexo}}</div>
+            </td>
+            <td>
+                <div class="example-element-paterno"> {{element.CURP}} </div>
+            </td>
+            <td>
+                <div class="example-element-name"> {{element.Nacimiento  | date:'yyyy-MM-dd'}} </div>
+            </td>
+            <td>
+               <div class="example-element-weight"> {{element.Municipo}} </div>
+            </td>
+            <td>
+              <div class="example-element-weight"> {{element.IdColonia}}</div>
+           </td>
+           <td>
+                <div class="example-element-weight"> 
+                  <!-- (click)="deleteAlumno(element.IdAlumno,'seguridad')" -->
+                    <button class="btn btn-danger" name="deleteAlumno" (submit)="deleteAlumno(element.IdAlumno,'seguridad')"><i class="far fa-trash-alt"></i>
+                </button> </div>
+                <div>
+                  <!--
+                    [routerLink]="['/alumno/edit',alumnos.IdAlumno]" 
+                  -->
+                    <button class="btn btn-info btn-block" (click)="mostrarModalConf(element.IdAlumno)">
+                    <i class="far fa-edit"></i>
+                </button>
+                </div>
+            </td>
+            </tr>
+            <tr border="1">
+              <th colspan="2">Tutor Padre</th>
+              <th colspan="2">Tutor Madre</th>
+              <th colspan="2">Tutor Recolector</th>
+            </tr>
+            <tr>
+              <td >
+                <!--<img width="100" height="100" src='{{element.PapaFoto}}' alt="thumbnail">-->
+                <img [src]="element.PapaFoto == '' ? '../../assets/noimage.png.jpg' : element.PapaFoto">
+              </td> 
+              <td>
+                {{element.PapaNombre}}
+                {{element.PapaPaterno}}
+                {{element.PapaMaterno}} 
+                <div class="example-element-weight">
+                  <!--(click)="deletePapa(element.IdPapa,'seguridad')" -->
+                  <button class="btn btn-danger" name="deletePapa" (click)="deletePapa(element.IdPapa,'seguridad')"><i class="far fa-trash-alt"></i>
+                  </button> 
+                </div>
+                <div>
+                  <button class="btn btn-info btn-block" name="editPapa" (click)="mostrarModalConfPapa(element.IdPapa,element.IdAlumno)">
+                  <i class="far fa-edit"></i>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <img width="100" height="100" src='{{element.MamaFoto}}' alt="thumbnail">
+              </td>
+              <td>
+                {{element.MamaNombre}}
+                {{element.MamaPaterno}}
+                {{element.MamaMaterno}}
+                
+                <div class="example-element-weight">
+                  <!-- (click)="deleteAlumno(element.IdAlumno,'seguridad')"  --> 
+                  <button class="btn btn-danger" name="deleteMama" ><i class="far fa-trash-alt"></i>
+                  </button> 
+                </div>
+                <div>
+                  <button class="btn btn-info btn-block" (click)="mostrarModalConf(element.IdAlumno)">
+                  <i class="far fa-edit"></i>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <img width="100" height="100" src='{{element.RecolectorFoto}}' alt="thumbnail">
+              </td>
+              <td>
+                {{element.RecolectorNombre}}
+                {{element.RecolectorPaterno}}
+                {{element.RecolectorMaterno}}
+                <div class="example-element-weight">
+                  <!--  (click)="deleteAlumno(element.IdAlumno,'seguridad')"  --> 
+                  <button class="btn btn-danger" name="deleteRecolector" ><i class="far fa-trash-alt"></i>
+                  </button> 
+                </div>
+                <div>
+                  <button class="btn btn-info btn-block" (click)="mostrarModalConf(element.IdAlumno)">
+                  <i class="far fa-edit"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </table>    
+       
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>
+<mat-paginator
+  #paginator
+  [pageSizeOptions]="[2, 4, 6]"
+  showFirstLastButtons
+></mat-paginator>
+<div class="text-center">
+  <p>Haz click en el boton para lanzar el modal deseado</p>
+  <p><button (click)="mostrarModalInfo()">Modal para informar</button></p>
+  <p><button (click)="mostrarModalConf('0')">Nuevo Alumno</button></p>
+  <p><button (click)="mostrarModalConfTutor('0')">Tutor</button></p>
+</div>
+
+<!-- modales -->
+<!-- modal info -->
+<ng-template #myModalInfo let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Éxito</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()"> 
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      
+    </div>
+  </div>
+
+</ng-template>
+<!-- Form de Alumno-->
+<ng-template #myModalConf let-modal>
+
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Alumno</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close('Cerrado desde la ventana')"> 
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <form id="contactForm" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-group">
+            <input type="text" name="nombre" [(ngModel)]="alumno.Nombre" placeHolder="nombre" 
+            class="form-control" autofocus formControlName="nombre">
+            
+        </div>
+        <div class="form-group">
+            <input type="text" name="paterno" [(ngModel)]="alumno.Paterno" placeHolder="apellido paterno" 
+            class="form-control" formControlName="paterno">
+        </div>
+        <div class="form-group">
+            <input type="text" name="materno" [(ngModel)]="alumno.Materno" placeHolder="apellido materno" 
+            class="form-control" formControlName="materno">
+        </div>
+        <div class="form-group">
+            <select class="" name="estado" [(ngModel)]="alumno.IdEstado" formControlName="estado">
+                <option [selected]="true" [value]="0">Seleccion el estado.. .</option>
+                <option value="1"> CDMX </option>
+                <option value="2"> EDOMEX </option>
+                <option value="3"> SONORA </option>
+          </select>
+        </div>
+        <div class="form-group">
+            <input type="text" name="curp" [(ngModel)]="alumno.CURP" placeHolder="CURP" 
+            class="form-control" formControlName="curp">
+        </div>
+        <div class="form-group">
+            <select class="" name="sexo" [(ngModel)]="alumno.Sexo" formControlName="sexo">
+                <option [selected]="true" [value]="0">Seleccion el Sexo.. .</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+          </select>
+        </div>
+        <div class="form-group">
+            <input type="date" name="nacimiento" [ngModel]="alumno.Nacimiento | date:'yyyy-MM-dd' : 'UTC'"  (ngModelChange)="alumno.Nacimiento = $event"
+            placeHolder="Fecha de Nacimiento DD/MM/YYYY" class="form-control" formControlName="nacimiento">
+            
+        </div>
+        <div class="form-group">
+          <span>Jardin: </span>
+          <select class="" name="jardin" [(ngModel)]="alumno.IdJardin" formControlName="jardin">
+              <option [selected]="true" [value]="9">Seleccion el Jardin</option>
+              <option value="1"> San Miguel </option>
+              <option value="2"> San Juan </option>
+        </select>
+      </div>
+        <div class="form-group">
+            <input type="text" name="calle" [(ngModel)]="alumno.Calle" placeHolder="Calle" 
+            class="form-control" formControlName="calle">
+        </div>
+        <div class="form-group">
+            <input type="text" name="numero" [(ngModel)]="alumno.Numero" placeHolder="Numero" 
+            class="form-control" formControlName="numero">
+        </div>
+        <div class="form-group">
+            <span>Colonia: </span>
+            <select class="" name="colonia" [(ngModel)]="alumno.IdColonia" formControlName="colonia">
+                <option [selected]="true" [value]="9">Seleccion la Colonia</option>
+                <option value="1"> San Miguel </option>
+                <option value="2"> San Juan </option>
+          </select>
+        </div>
+        <div class="form-group">
+            <input type="text" name="municipio" [(ngModel)]="alumno.Municipio" placeHolder="Municipio" 
+            class="form-control" formControlName="municipio">
+        </div>
+        <div class="form-group">
+            <input type="text" name="postal" [(ngModel)]="alumno.Postal" placeHolder="CP" 
+            class="form-control" formControlName="postal">
+        </div>
+        <div class="form-group">
+            <span>Estatus: </span>
+            <select class="" name="status" [(ngModel)]="alumno.Status" formControlName="status">
+                <option [selected]="true" [value]="9">Seleccion el Status</option>
+                <option value="1"> Activo </option>
+                <option value="0"> Desactivado </option>
+          </select>
+        </div> 
+        <div class="form-group">
+            <input type="text" name="foto" [(ngModel)]="alumno.Foto" placeHolder="foto" 
+            class="form-control" formControlName="foto">
+        </div>
+        <div class="form-group">
+            <input type="text" name="telefono" [(ngModel)]="alumno.Telefono" placeHolder="telefono" 
+            class="form-control" formControlName="telefono">
+        </div>
+        <div class="form-group">
+            <input type="text" name="correo" [(ngModel)]="alumno.Correo" placeHolder="correo" 
+            class="form-control" formControlName="correo">
+        </div>
+      </form>
+    
+    </div>
+    <div class="modal-footer">
+      <!-- submitGlobal() -->
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="submit()">Guardar</button>
+      <button type="button" class="btn btn-primary" (click)="modal.close('Si')">Cancelar</button>
+    </div>
+  </div>
+
+</ng-template>
+<!-- form de Tutor-->
+<ng-template #myModalConfTutor let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Tutor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close('Cerrado desde la ventana')"> 
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <!-- (ngSubmit)="submit()" -->
+      <form id="contactFormTutor" [formGroup]="formtutor" >
+        <div class="form-group">
+          <select class="" name="tutorrol" [(ngModel)]="Tutor.IdTutorRol" formControlName="tutorrol">
+              <option [selected]="true" [value]="0">Seleccion el Parentesco.. .</option>
+              <option value="1">Papa</option>
+              <option value="2">Máma</option>
+              <option value="3">Recolector</option>
+        </select>
+      </div>
+        <div class="form-group">
+            <input type="text" name="nombretutor" [(ngModel)]="Tutor.NombreTutor" placeHolder="nombre Tutor" 
+            class="form-control" autofocus formControlName="nombretutor">
+            
+        </div>
+        <div class="form-group">
+            <input type="text" name="paternotutor" [(ngModel)]="Tutor.PaternoTutor" placeHolder="Paterno Tutor" 
+            class="form-control" formControlName="paternotutor">
+        </div>
+        <div class="form-group">
+            <input type="text" name="maternotutor" [(ngModel)]="Tutor.MaternoTutor" placeHolder="Materno Tutor" 
+            class="form-control" formControlName="maternotutor">
+        </div>
+        <div class="form-group">
+            <select class="" name="tutorlegal" [(ngModel)]="Tutor.TutorLegal" formControlName="tutorlegal">
+                <option [selected]="true" [value]="0">¿Es tutor Legal?.. .</option>
+                <option value="1"> Si </option>
+                <option value="0"> No </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="" name="estadotutor" [(ngModel)]="Tutor.IdEstadoTutor" formControlName="estadotutor">
+              <option [selected]="true" [value]="0">Seleccion el estado.. .</option>
+              <option value="1"> CDMX </option>
+              <option value="2"> EDOMEX </option>
+              <option value="3"> SONORA </option>
+        </select>
+      </div>
+        <div class="form-group">
+            <input type="text" name="curptutor" [(ngModel)]="Tutor.CURPTutor" placeHolder="CURP Tutor" 
+            class="form-control" formControlName="curptutor">
+        </div>
+        <div class="form-group">
+          <input type="text" name="inetutor" [(ngModel)]="Tutor.INETutor" placeHolder="INE Tutor" 
+          class="form-control" formControlName="inetutor">
+      </div>
+        <div class="form-group">
+            <select class="" name="sexotutor" [(ngModel)]="Tutor.SexoTutor" formControlName="sexotutor">
+                <option [selected]="true" [value]="0">Seleccion el Sexo.. .</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option> 
+          </select>
+        </div>
+        <div class="form-group">
+            <input type="date" name="nacimientotutor" [(ngModel)]="Tutor.NacimientoTutor" 
+            placeHolder="Fecha de Nacimiento DD/MM/YYYY" class="form-control" formControlName="nacimientotutor">
+            
+        </div>
+        <div class="form-group">
+            <input type="text" name="calletutor" [(ngModel)]="Tutor.CalleTutor" placeHolder="Calle Tutor" 
+            class="form-control" formControlName="calletutor">
+        </div>
+        <div class="form-group">
+            <input type="text" name="numerotutor" [(ngModel)]="Tutor.NumeroTutor" placeHolder="Numero Tutor" 
+            class="form-control" formControlName="numerotutor">
+        </div>
+        <div class="form-group">
+            <span>Colonia: </span>
+            <select class="" name="coloniatutor" [(ngModel)]="Tutor.IdColoniaTutor" formControlName="coloniatutor">
+                <option [selected]="true" [value]="9">Seleccion la Colonia</option>
+                <option value="1"> San Miguel </option>
+                <option value="2"> San Juan </option>
+          </select>
+        </div>
+        <div class="form-group">
+            <input type="text" name="municipiotutor" [(ngModel)]="Tutor.MunicipioTutor" placeHolder="Municipio tutor" 
+            class="form-control" formControlName="municipiotutor">
+        </div>
+        <div class="form-group">
+            <input type="text" name="postaltutor" [(ngModel)]="Tutor.PostalTutor" placeHolder="CP Tutor" 
+            class="form-control" formControlName="postaltutor">
+        </div>
+        <div class="form-group">
+            <span>Estatus: </span>
+            <select class="" name="statustutor" [(ngModel)]="Tutor.StatusTutor" formControlName="statustutor">
+                <option [selected]="true" [value]="9">Seleccion el Status</option>
+                <option value="1"> Activo </option>
+                <option value="0"> Desactivado </option>
+          </select>
+        </div> 
+        <div class="form-group">
+            <input type="text" name="fototutor" [(ngModel)]="Tutor.FotoTutor" placeHolder="fototutor" 
+            class="form-control" formControlName="fototutor">
+        </div>
+        <div class="form-group">
+            <input type="text" name="telefonotutor" [(ngModel)]="Tutor.TelefonoTutor" placeHolder="telefonotutor" 
+            class="form-control" formControlName="telefonotutor">
+        </div>
+        <div class="form-group">
+            <input type="text" name="correotutor" [(ngModel)]="Tutor.CorreoTutor" placeHolder="correo tutor"
+            class="form-control" formControlName="correotutor">
+        </div>
+       </form>
+    
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="submittemp()">Guardar</button>
+      <button type="button" class="btn btn-primary" (click)="modal.close('Si')">Cancelar</button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- form de Padre-->
+<ng-template #myModalConfPadre let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Papá</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close('Cerrado desde la ventana')"> 
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <!-- (ngSubmit)="submit()" -->
+      <form id="contactFormPapa" [formGroup]="formpapa" >
+        <div class="form-group">
+          <input type="text" name="papanombre" [(ngModel)]="papa.PapaNombre" placeHolder="nombre papa" 
+          class="form-control" autofocus formControlName="papanombre">
+          
+      </div>
+      <div class="form-group">
+          <input type="text" name="papapaterno" [(ngModel)]="papa.PapaPaterno" placeHolder="Paterno papa" 
+          class="form-control" formControlName="papapaterno">
+      </div>
+      <div class="form-group">
+          <input type="text" name="papamaterno" [(ngModel)]="papa.PapaMaterno" placeHolder="Materno papa" 
+          class="form-control" formControlName="papamaterno">
+      </div>
+      <div class="form-group">
+          <select class="" name="papatutorlegal" [(ngModel)]="papa.PapaTutorLegal" formControlName="papatutorlegal">
+              <option [selected]="true" [value]="0">¿Es papa Legal?.. .</option>
+              <option value="1"> Si </option>
+              <option value="0"> No </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <select class="" name="papaestado" [(ngModel)]="papa.PapaIdEstado" formControlName="papaestado">
+            <option [selected]="true" [value]="0">Seleccion el estado.. .</option>
+            <option value="1"> CDMX </option>
+            <option value="2"> EDOMEX </option>
+            <option value="3"> SONORA </option>
+      </select>
+    </div>
+      <div class="form-group">
+          <input type="text" name="papacurp" [(ngModel)]="papa.PapaCURP" placeHolder="CURP papa" 
+          class="form-control" formControlName="papacurp">
+      </div>
+      <div class="form-group">
+        <input type="text" name="papaine" [(ngModel)]="papa.PapaINE" placeHolder="INE papa" 
+        class="form-control" formControlName="papaine">
+    </div>
+      <div class="form-group">
+          <select class="" name="papasexo" [(ngModel)]="papa.PapaSexo" formControlName="papasexo">
+              <option [selected]="true" [value]="0">Seleccion el Sexo.. .</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Masculino">Masculino</option> 
+        </select>
+      </div>
+      <div class="form-group">
+          <input type="date" name="papanacimiento" [ngModel]="papa.PapaNacimiento | date:'yyyy-MM-dd' : 'UTC'"  (ngModelChange)="papa.PapaNacimiento = $event" 
+          placeHolder="Fecha de Nacimiento DD/MM/YYYY" class="form-control" formControlName="papanacimiento">
+          
+      </div>
+      <div class="form-group">
+          <input type="text" name="papacalle" [(ngModel)]="papa.PapaCalle" placeHolder="Calle papa" 
+          class="form-control" formControlName="papacalle">
+      </div>
+      <div class="form-group">
+          <input type="text" name="papanumero" [(ngModel)]="papa.PapaNumero" placeHolder="Numero papa" 
+          class="form-control" formControlName="papanumero">
+      </div>
+      <div class="form-group">
+          <span>Colonia: </span>
+          <select class="" name="papacolonia" [(ngModel)]="papa.PapaIdColonia" formControlName="papacolonia">
+              <option [selected]="true" [value]="9">Seleccion la Colonia</option>
+              <option value="1"> San Miguel </option>
+              <option value="2"> San Juan </option>
+        </select>
+      </div>
+      <div class="form-group">
+          <input type="text" name="papamunicipio" [(ngModel)]="papa.PapaMunicipio" placeHolder="Municipio papa" 
+          class="form-control" formControlName="papamunicipio">
+      </div>
+      <div class="form-group">
+          <input type="text" name="papapostal" [(ngModel)]="papa.PapaPostal" placeHolder="CP papa" 
+          class="form-control" formControlName="papapostal">
+      </div>
+      <div class="form-group">
+          <span>Estatus: </span>
+          <select class="" name="papastatus" [(ngModel)]="papa.PapaStatus" formControlName="papastatus">
+              <option [selected]="true" [value]="9">Seleccion el Status</option>
+              <option value="1"> Activo </option>
+              <option value="0"> Desactivado </option>
+        </select>
+      </div> 
+      <div class="form-group">
+          <input type="text" name="papafoto" [(ngModel)]="papa.PapaFoto" placeHolder="papafoto" 
+          class="form-control" formControlName="papafoto">
+      </div>
+      <div class="form-group">
+          <input type="text" name="papatelefono" [(ngModel)]="papa.PapaTelefono" placeHolder="telefonopapa" 
+          class="form-control" formControlName="papatelefono">
+      </div>
+      <div class="form-group">
+          <input type="text" name="papacorreo" [(ngModel)]="papa.PapaCorreo" placeHolder="correo papa"
+          class="form-control" formControlName="papacorreo">
+      </div>
+       </form>
+    
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" name="btnSavePapa" data-dismiss="modal" (click)="submitPapa()">Guardar</button>
+      <button type="button" class="btn btn-primary" name="btnCancelPapa" (click)="modal.close('Si')">Cancelar</button>
+    </div>
+  </div>
+</ng-template>

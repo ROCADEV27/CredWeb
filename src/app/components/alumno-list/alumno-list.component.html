@@ -1,0 +1,44 @@
+<table>
+    <tr>
+        <th style="border:1px solid red;" colspan="1">Nombre</th>
+        <th style="border:1px solid red;">Paterno</th>
+        <th style="border:1px solid red;">Materno</th>
+        <th style="border:1px solid red;">Estado</th>
+    </tr>
+    <div  *ngFor="let alumnos of alumnos">
+    <tr>
+        <td style="border:1px solid red;">{{alumnos.Nombre}}</td>
+        <td style="border:1px solid red;">{{alumnos.Paterno}}</td>
+        <td style="border:1px solid red;">{{alumnos.Materno}}</td>
+        <td style="border:1px solid red;">{{alumnos.IdEstado}}</td>
+        <td style="border:1px solid red;">{{alumnos.CURP}}</td>
+        <td style="border:1px solid red;">{{alumnos.Sexo}}</td>
+        <td style="border:1px solid red;">{{alumnos.Nacimiento | date:'yyyy-MM-dd'}}</td>
+        <td style="border:1px solid red;">{{alumnos.STATUS }}</td>
+        <div *ngIf="alumnos.STATUS" style="color:green">Activo</div>
+        <div *ngIf="!alumnos.STATUS" style="color:red">Desactivado</div>
+        
+        <td>
+            <div >
+                <button class="btn btn-danger" (click)="deleteAlumno(alumnos.IdAlumno,'seguridad')">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
+        </td>
+        <td style="border:1px solid red;">
+            <button class="btn btn-info btn-block" [routerLink]="['/alumno/edit',alumnos.IdAlumno]" >
+                <i class="far fa-edit"></i>
+            </button>
+        </td>
+    </tr>
+    </div>
+</table>
+
+<!--
+{{alumno.FECHANACIMIENTO| date: 'YYYY-MM-dd HH:mm:ss'}}
+-->
+
+
+
+
+

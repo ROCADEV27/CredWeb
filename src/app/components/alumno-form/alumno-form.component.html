@@ -1,0 +1,108 @@
+<div class="col-md-4 offset-md-2">
+    <div class="card">
+        <div class="card-body">
+            <form id="contactForm" [formGroup]="form" (ngSubmit)="submit()">
+                <div class="form-group">
+                    <input type="text" name="nombre" [(ngModel)]="alumno.Nombre" placeHolder="nombre" 
+                    class="form-control" autofocus formControlName="nombre">
+                    
+                </div>
+                <div class="form-group">
+                    <input type="text" name="paterno" [(ngModel)]="alumno.Paterno" placeHolder="apellido paterno" 
+                    class="form-control" formControlName="paterno">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="materno" [(ngModel)]="alumno.Materno" placeHolder="apellido materno" 
+                    class="form-control" formControlName="materno">
+                </div>
+                <div class="form-group">
+                    <select class="" name="estado" [(ngModel)]="alumno.IdEstado" formControlName="estado">
+                        <option [selected]="true" [value]="0">Seleccion el estado.. .</option>
+                        <option value="1"> CDMX </option>
+                        <option value="2"> EDOMEX </option>
+                        <option value="3"> SONORA </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="curp" [(ngModel)]="alumno.CURP" placeHolder="CURP" 
+                    class="form-control" formControlName="curp">
+                </div>
+                <div class="form-group">
+                    <select class="" name="sexo" [(ngModel)]="alumno.Sexo" formControlName="sexo">
+                        <option [selected]="true" [value]="0">Seleccion el Sexo.. .</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Masculino">Masculino</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                    <input type="date" name="nacimiento" [(ngModel)]="alumno.Nacimiento" 
+                    placeHolder="Fecha de Nacimiento DD/MM/YYYY" class="form-control" formControlName="nacimiento">
+                    
+                </div>
+                <div class="form-group">
+                    <input type="text" name="calle" [(ngModel)]="alumno.Calle" placeHolder="Calle" 
+                    class="form-control" formControlName="calle">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="numero" [(ngModel)]="alumno.Numero" placeHolder="Numero" 
+                    class="form-control" formControlName="numero">
+                </div>
+                <div class="form-group">
+                    <span>Colonia: </span>
+                    <select class="" name="colonia" [(ngModel)]="alumno.IdColonia" formControlName="colonia">
+                        <option [selected]="true" [value]="9">Seleccion la Colonia</option>
+                        <option value="1"> San Miguel </option>
+                        <option value="2"> San Juan </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="municipio" [(ngModel)]="alumno.Municipio" placeHolder="Municipio" 
+                    class="form-control" formControlName="municipio">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="postal" [(ngModel)]="alumno.Postal" placeHolder="CP" 
+                    class="form-control" formControlName="postal">
+                </div>
+                <div class="form-group">
+                    <span>Estatus: </span>
+                    <select class="" name="status" [(ngModel)]="alumno.Status" formControlName="status">
+                        <option [selected]="true" [value]="9">Seleccion el Status</option>
+                        <option value="1"> Activo </option>
+                        <option value="0"> Desactivado </option>
+                  </select>
+                </div> 
+                <div class="form-group">
+                    <input type="text" name="foto" [(ngModel)]="alumno.Foto" placeHolder="foto" 
+                    class="form-control" formControlName="foto">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="telefono" [(ngModel)]="alumno.Telefono" placeHolder="telefono" 
+                    class="form-control" formControlName="telefono">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="correo" [(ngModel)]="alumno.Correo" placeHolder="correo" 
+                    class="form-control" formControlName="correo">
+                </div>
+                <button id="btnSubmit" type="submit" class="btn btn-success btn-block" >Guardar</button>
+                <button type="submit" (click)="cancelOper()" class="btn btn-secondary btn-block" >Cancelar</button>
+            </form>
+        </div>
+        <div>
+    </div>
+    </div>
+</div>
+<!--
+    antes en el boton se usaba el clik
+    
+-->
+<!--
+<div class="col-md-4">
+    <div class="card card-body text-center">
+        
+        <h3>{{alumno.IdAlumno}}. {{alumno.Nombre == '' ? 'Nombre del alumno' : alumno.Nombre}}</h3>
+        <p>{{alumno.Paterno == '' ? 'escriba el paterno' : alumno.Paterno}} </p>
+         const formatedDate = moment(yourDate).format('YYYY-MM-DD HH:mm:ss') 
+        <p>{{alumno.FECHANACIMIENTO| date: 'YYYY-MM-DD HH:mm:ss'}}</p>
+    </div>
+</div>
+-->

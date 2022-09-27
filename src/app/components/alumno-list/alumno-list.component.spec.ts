@@ -1,0 +1,24 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { AlumnoListComponent } from './alumno-list.component';
+import { alumnosService} from '../../services/alumnos.service';
+
+describe('AlumnoListComponent', () => {
+  let component: AlumnoListComponent;
+  let fixture: ComponentFixture<AlumnoListComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ AlumnoListComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(AlumnoListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
